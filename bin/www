@@ -1,0 +1,123 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('testApp:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/*
+var mapURL = 'http://dev.virtualearth.net/REST/V1/Routes/Driving?';
+var serviceURL = '/REST/V1/Routes/Driving?';
+var paramURL = '';
+var bingMapKey = 'AsSFSTzPO4mRLoSPz3agxIpW8wKnnoG5FhGtCr85EZ9OFumTGebtFtgNoV1rTM83';
+var options = {
+  host: 'dev.virtualearth.net',
+  path: '/REST/V1/Routes/Driving?wp.0=33.777405,-84.398304&wp.1=33.847848,-84.363602&optmz=timeWithTraffic&key=AsSFSTzPO4mRLoSPz3agxIpW8wKnnoG5FhGtCr85EZ9OFumTGebtFtgNoV1rTM83'
+};
+
+var req = http.get(options, function(res) {
+  console.log('STATUS: ' + res.statusCode);
+  console.log('HEADERS: ' + JSON.stringify(res.headers));
+
+  // Buffer the body entirely for processing as a whole.
+  var bodyChunks = [];
+  res.on('data', function(chunk) {
+    // You can process streamed parts here...
+    bodyChunks.push(chunk);
+  }).on('end', function() {
+    var body = Buffer.concat(bodyChunks);
+    var jsonObj = JSON.parse(body);
+    var travelTime = jsonObj.resourceSets[0].resources[0].travelDurationTraffic;
+    console.log(travelTime);
+    // ...and/or process the entire body here.
+  })
+});
+
+req.on('error', function(e) {
+  console.log('ERROR: ' + e.message);
+});
+
+*/
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
